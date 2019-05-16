@@ -43,6 +43,7 @@ int push(SqStack *s, int e) {
 
 int main() {
     char item = 'a';
+    int signpost = -1;
     int *compared;
     compared = (int *)malloc(sizeof(int));
     SqStack *S;
@@ -50,16 +51,25 @@ int main() {
     int state = OK;
     state = initStack(S);
     while (cin >> item && state) {
-        if (item == '('){
-            state = push(S,item);
-            if (!state) break;
-        }else if (item == ')'){
-            state = pop(S,compared);
-            if (!state) break;
-        }else
-            continue;
+        if (item == '&') {
+            signpost++;
+        } else if (item == '@') {
+            if (S->top == S->base) {
+                cout << 1;
+                return 0;
+            }
+        } else {
+            if (signpost < 0) {
+                state = push(S, item);
+            } else {
+                state = pop(S, compared);
+                if (*compared != item) {
+                    cout << 0;
+                    return 0;
+                }
+            }
+        }
     }
-    if (S->top != S->base)
-        state = 0;
-    cout << state;
+    cout << 0;
+    return 0;
 }
